@@ -7,7 +7,7 @@ Example usage.
 ```
 let
   # Pinning example: https://gist.github.com/CMCDragonkai/b5a37367094223e2d3c26b96644340f3#pinning
-  overlay = builtins.fetchTarball https://api.github.com/repos/nrhtr/nix-overlays/tarball/main;
+  overlay = builtins.fetchTarball https://github.com/nrhtr/nix-overlays/archive/main.tar.gz;
 ...
 
 nixpkgs.overlays = [ (import overlay) ];
