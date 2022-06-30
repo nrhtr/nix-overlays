@@ -10,6 +10,7 @@
 , python-keystoneclient
 , python-novaclient
 , python-designateclient
+#, python-troveclient
 , nectarallocationclient
 , requests-mock
 , sphinx
@@ -38,6 +39,7 @@ buildPythonPackage rec {
     python-keystoneclient
     python-novaclient
     python-designateclient
+    #python-troveclient
     nectarallocationclient
   ];
 

@@ -14,9 +14,81 @@ _self: _super: rec {
   hiera-eyaml-gpg = _super.callPackage ./pkgs/hiera-eyaml-gpg/default.nix { };
   python3 = _super.python3.override {
     packageOverrides = self: super: rec {
+      macaroonbakery = self.buildPythonPackage rec {
+        pname = "macaroonbakery";
+        version = "1.3.1";
+
+        src = super.fetchPypi {
+          inherit pname version;
+          sha256 = "sha256-I/OEFTQaHQShVbTaxnMNOtXzm4bOB7G7E0vdpStIsFM=";
+        };
+
+        buildInputs = with super; [
+          pytest
+        ];
+
+        doCheck = false;
+
+        propagatedBuildInputs = with super; [ 
+          pymacaroons
+          requests
+          protobuf
+          pyRFC3339
+        ];
+      };
+      python-libmaas = self.buildPythonPackage rec {
+        pname = "python-libmaas";
+        #version = "0.6.6";
+        version = "unstable-2022-01-12";
+
+        src = _super.fetchFromGitHub {
+          owner = "maas";
+          repo = "python-libmaas";
+          rev = "ae3e321924b231ae5b765cd70cdd074cc2a9929e";
+          sha256 = "sha256-ZpGpkyUWq9tezZQ0do9J+K92wLsXB0ZwmznvVzJTX+k=";
+        };
+
+        #src = super.fetchPypi {
+          #inherit pname version;
+          #sha256 = "sha256-XabQ9jug13KfMu7z7Tssj9YPKAD32PPaQzOUvUzTZnA=";
+        #};
+
+        buildInputs = with super; [
+          django
+          fixtures
+          setuptools
+          testscenarios
+          testtools
+          twisted
+        ];
+
+        doCheck = false;
+
+        propagatedBuildInputs = with super; [ 
+          oauthlib
+          terminaltables
+          argcomplete
+          colorclass
+          macaroonbakery
+          aiohttp
+          pyyaml
+          pymongo
+        ];
+      };
       dnspython = super.dnspython.overrideAttrs (oldAttrs: rec {
         doCheck = false;
         doInstallCheck = false;
+      });
+      detect-secrets = super.detect-secrets.overrideAttrs (oldAttrs: rec {
+        pname = "detect-secrets";
+        version = "1.2.0";
+        src = super.fetchFromGitHub {
+          owner = "Yelp";
+          repo = pname;
+          rev = "v${version}";
+          hash = "sha256-4VcV06iaL3NAj7qF8RyfWV1zgrt928AQfjGeuO2Pbjk=";
+          leaveDotGit = true;
+        };
       });
       oslo-log = super.oslo-log.overrideAttrs (oldAttrs: rec {
         doCheck = false;
@@ -26,6 +98,10 @@ _self: _super: rec {
         self.callPackage ./pkgs/python-neutronclient/default.nix { };
       python-designateclient =
         self.callPackage ./pkgs/python-designateclient/default.nix { };
+      python-troveclient =
+        self.callPackage ./pkgs/python-troveclient/default.nix { };
+      python-mistralclient =
+        self.callPackage ./pkgs/python-mistralclient/default.nix { };
       python-openstackclient =
         self.callPackage ./pkgs/python-openstackclient/default.nix { };
       ssh2-python = self.buildPythonPackage rec {
